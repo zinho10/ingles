@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INGLISH NOW — Fale inglês de verdade</title>
+  <meta name="description" content="Curso de inglês focado em conversação. Aulas ao vivo, prática guiada e método imersivo para você falar com confiança em até 6 meses." />
+  <meta name="theme-color" content="#07080b" />
+  <meta name="color-scheme" content="dark" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="INGLISH NOW — Fale inglês de verdade" />
+  <meta property="og:description" content="Curso de inglês focado em conversação. Aulas ao vivo, prática guiada e método imersivo." />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23d4ff4f'/%3E%3Cpath d='M18 44V20h7l9 13 9-13h7v24h-7V32l-9 12-9-12v12z' fill='%2307080b'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <noscript>
+    <style>
+      .reveal { opacity: 1 !important; transform: none !important; }
+      .faq__answer { grid-template-rows: 1fr !important; }
+      .faq__icon { display: none; }
+    </style>
+  </noscript>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"><span id="scrollBar"></span></div>
+
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- ================= HEADER ================= -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="#inicio" class="brand" aria-label="INGLISH NOW — início">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16M4 12h10M4 18h7" />
+          </svg>
+        </span>
+        <span class="brand__text">INGLISH<em>NOW</em></span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Navegação principal">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="#inicio">Início</a></li>
+          <li><a class="nav__link" href="#sobre">O curso</a></li>
+          <li><a class="nav__link" href="#metodo">Método</a></li>
+          <li><a class="nav__link" href="#planos">Planos</a></li>
+          <li><a class="nav__link" href="#depoimentos">Alunos</a></li>
+          <li><a class="nav__link" href="#faq">FAQ</a></li>
+        </ul>
+        <a href="#matricula" class="btn btn--primary btn--sm nav__cta">Matricule-se</a>
+      </nav>
+
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="nav" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <!-- ================= HERO ================= -->
+    <section class="hero" id="inicio">
+      <div class="hero__glow hero__glow--a" aria-hidden="true"></div>
+      <div class="hero__glow hero__glow--b" aria-hidden="true"></div>
+      <div class="hero__grid" aria-hidden="true"></div>
+
+      <div class="container hero__inner">
+        <div class="hero__copy">
+          <span class="badge reveal">
+            <span class="badge__dot"></span> Turmas abertas · vagas limitadas
+          </span>
+
+          <h1 class="hero__title reveal" style="--d: .05s">
+            Fale inglês<br />
+            <span class="gradient-text">de verdade.</span>
+          </h1>
+
+          <p class="hero__lead reveal" style="--d: .1s">
+            Chega de decorar regras e travar na hora de falar. Aqui você treina
+            conversação desde a primeira aula — com método, prática guiada e
+            feedback de verdade.
+          </p>
+
+          <div class="hero__actions reveal" style="--d: .15s">
+            <a href="#matricula" class="btn btn--primary">
+              Quero começar agora
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </a>
+            <a href="#planos" class="btn btn--ghost">Ver planos</a>
+          </div>
+
+          <dl class="hero__stats reveal" style="--d: .2s">
+            <div>
+              <dt>Alunos ativos</dt>
+              <dd><span class="count" data-count="2400" data-suffix="+">0</span></dd>
+            </div>
+            <div>
+              <dt>Avaliação média</dt>
+              <dd><span class="count" data-count="4.9" data-decimals="1">0</span><span class="stat-star">★</span></dd>
+            </div>
+            <div>
+              <dt>Foco em fala</dt>
+              <dd><span class="count" data-count="90" data-suffix="%">0</span></dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Cartão visual do hero -->
+        <div class="hero__visual reveal" style="--d: .15s" aria-hidden="true">
+          <div class="lesson-card">
+            <div class="lesson-card__top">
+              <div class="lesson-card__avatar">AN</div>
+              <div class="lesson-card__meta">
+                <strong>Aula ao vivo · B1</strong>
+                <span>Com Ana &amp; turma de 6 alunos</span>
+              </div>
+              <span class="live"><i></i> AO VIVO</span>
+            </div>
+
+            <div class="lesson-card__topic">
+              <span class="lesson-card__label">Today's topic</span>
+              <h3>Small talk &amp; first impressions</h3>
+            </div>
+
+            <div class="dialogue">
+              <div class="bubble bubble--left">
+                <span class="bubble__who">You</span>
+                <p>“Hi! I'm still learning, but let's try.”</p>
+              </div>
+              <div class="bubble bubble--right">
+                <span class="bubble__who">Teacher</span>
+                <p>“Perfect start. Now tell me about your weekend.”</p>
+              </div>
+            </div>
+
+            <div class="lesson-card__progress">
+              <div class="progress__row">
+                <span>Progresso da aula</span>
+                <span>68%</span>
+              </div>
+              <div class="progress"><span style="--p: 68%"></span></div>
+            </div>
+
+            <div class="lesson-card__footer">
+              <div class="avatars">
+                <span>LC</span><span>RM</span><span>JS</span><span>+3</span>
+              </div>
+              <span class="lesson-card__next">Próxima aula · Ter, 19h</span>
+            </div>
+          </div>
+
+          <div class="float-chip float-chip--speak">
+            <span class="float-chip__icon">🎙️</span>
+            <div><strong>Speaking</strong><small>treino diário</small></div>
+          </div>
+          <div class="float-chip float-chip--level">
+            <span class="float-chip__level">B2</span>
+            <div><strong>Seu nível</strong><small>em evolução</small></div>
+          </div>
+          <div class="float-chip float-chip--streak">
+            <span class="float-chip__icon">🔥</span>
+            <div><strong>12 dias</strong><small>de sequência</small></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marquee -->
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee__track">
+          <span>Conversação</span><i>◆</i><span>Pronúncia</span><i>◆</i><span>Listening</span><i>◆</i><span>Fluência</span><i>◆</i><span>Confiança</span><i>◆</i><span>Carreira</span><i>◆</i>
+          <span>Conversação</span><i>◆</i><span>Pronúncia</span><i>◆</i><span>Listening</span><i>◆</i><span>Fluência</span><i>◆</i><span>Confiança</span><i>◆</i><span>Carreira</span><i>◆</i>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SOBRE ================= -->
+    <section class="section" id="sobre">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow reveal">O curso</span>
+          <h2 class="section__title reveal" style="--d: .05s">
+            Inglês não se aprende.<br /><span class="gradient-text">Se pratica.</span>
+          </h2>
+          <p class="section__lead reveal" style="--d: .1s">
+            O INGLISH NOW foi desenhado para quem já tentou de tudo e continua
+            travando na hora de falar. Aqui, a gramática é ferramenta — não o objetivo.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature card reveal" style="--d: .05s">
+            <span class="feature__icon">🗣️</span>
+            <h3>90% de fala</h3>
+            <p>Cada aula é um treino de conversação real. Você fala desde o primeiro minuto, sem esperar estar “pronto”.</p>
+          </article>
+
+          <article class="feature card reveal" style="--d: .1s">
+            <span class="feature__icon">🎯</span>
+            <h3>Turmas pequenas</h3>
+            <p>No máximo 6 alunos por turma. Tempo de fala garantido e feedback individual em todas as aulas.</p>
+          </article>
+
+          <article class="feature card reveal" style="--d: .15s">
+            <span class="feature__icon">📈</span>
+            <h3>Progresso visível</h3>
+            <p>Avaliações mensais, gravações de evolução e um plano claro do seu nível até a fluência.</p>
+          </article>
+
+          <article class="feature card reveal" style="--d: .2s">
+            <span class="feature__icon">🧠</span>
+            <h3>Método com base científica</h3>
+            <p>Repetição espaçada, input compreensível e prática deliberada — o que a pesquisa mostra que funciona.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MÉTODO ================= -->
+    <section class="section section--alt" id="metodo">
+      <div class="container">
+        <div class="section__head section__head--left">
+          <span class="eyebrow reveal">Como funciona</span>
+          <h2 class="section__title reveal" style="--d: .05s">Seu caminho até a <span class="gradient-text">fluência</span></h2>
+          <p class="section__lead reveal" style="--d: .1s">Quatro etapas simples, do primeiro “hello” à conversa sem travar.</p>
+        </div>
+
+        <ol class="steps">
+          <li class="step reveal" style="--d: .05s">
+            <span class="step__num">01</span>
+            <h3>Diagnóstico</h3>
+            <p>Uma conversa de 20 minutos para entender seu nível real e seus objetivos.</p>
+          </li>
+          <li class="step reveal" style="--d: .1s">
+            <span class="step__num">02</span>
+            <h3>Imersão guiada</h3>
+            <p>Aulas temáticas com situações reais: viagem, trabalho, entrevistas, dia a dia.</p>
+          </li>
+          <li class="step reveal" style="--d: .15s">
+            <span class="step__num">03</span>
+            <h3>Prática deliberada</h3>
+            <p>Exercícios de fala, sombra (shadowing) e correção de pronúncia com feedback.</p>
+          </li>
+          <li class="step reveal" style="--d: .2s">
+            <span class="step__num">04</span>
+            <h3>Fluência real</h3>
+            <p>Simulações de conversas reais e desafios semanais para consolidar a confiança.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= PLANOS ================= -->
+    <section class="section" id="planos">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow reveal">Planos</span>
+          <h2 class="section__title reveal" style="--d: .05s">Escolha o seu <span class="gradient-text">ritmo</span></h2>
+          <p class="section__lead reveal" style="--d: .1s">Sem fidelidade, sem letras miúdas. Cancele quando quiser.</p>
+        </div>
+
+        <div class="pricing">
+          <article class="plan card reveal" style="--d: .05s">
+            <header class="plan__head">
+              <h3>Essencial</h3>
+              <p>Para começar a destravar</p>
+            </header>
+            <p class="plan__price"><span class="plan__currency">R$</span>97<small>/mês</small></p>
+            <ul class="plan__features">
+              <li>2 aulas ao vivo por semana</li>
+              <li>Acesso à plataforma de treino</li>
+              <li>Material digital incluso</li>
+              <li>Grupo de prática no WhatsApp</li>
+            </ul>
+            <a href="#matricula" class="btn btn--ghost btn--block">Começar</a>
+          </article>
+
+          <article class="plan plan--featured card reveal" style="--d: .1s">
+            <span class="plan__tag">Mais escolhido</span>
+            <header class="plan__head">
+              <h3>Fluência</h3>
+              <p>Para evoluir rápido</p>
+            </header>
+            <p class="plan__price"><span class="plan__currency">R$</span>197<small>/mês</small></p>
+            <ul class="plan__features">
+              <li>3 aulas ao vivo por semana</li>
+              <li>1 aula particular por mês</li>
+              <li>Simulações de conversas reais</li>
+              <li>Correção de pronúncia individual</li>
+              <li>Certificado de conclusão</li>
+            </ul>
+            <a href="#matricula" class="btn btn--primary btn--block">Garantir vaga</a>
+          </article>
+
+          <article class="plan card reveal" style="--d: .15s">
+            <header class="plan__head">
+              <h3>VIP</h3>
+              <p>Para objetivos específicos</p>
+            </header>
+            <p class="plan__price"><span class="plan__currency">R$</span>397<small>/mês</small></p>
+            <ul class="plan__features">
+              <li>Aulas 100% individuais</li>
+              <li>Plano personalizado por objetivo</li>
+              <li>Mentoria de carreira e entrevistas</li>
+              <li>Acesso vitalício ao material</li>
+              <li>Suporte prioritário</li>
+            </ul>
+            <a href="#matricula" class="btn btn--ghost btn--block">Falar com consultor</a>
+          </article>
+        </div>
+
+        <p class="pricing__note reveal">💡 Todos os planos incluem teste de nível gratuito e 7 dias de garantia.</p>
+      </div>
+    </section>
+
+    <!-- ================= DEPOIMENTOS ================= -->
+    <section class="section section--alt" id="depoimentos">
+      <div class="container">
+        <div class="section__head">
+          <span class="eyebrow reveal">Alunos</span>
+          <h2 class="section__title reveal" style="--d: .05s">Quem treina, <span class="gradient-text">fala</span></h2>
+        </div>
+
+        <div class="testimonials">
+          <figure class="testimonial card reveal" style="--d: .05s">
+            <div class="stars" role="img" aria-label="5 de 5 estrelas">★★★★★</div>
+            <blockquote>
+              “Eu travava em reuniões com clientes gringos. Em quatro meses de treino, passei a conduzir as calls sozinha. A diferença foi falar desde a primeira aula.”
+            </blockquote>
+            <figcaption>
+              <span class="testimonial__avatar">MC</span>
+              <div><strong>Mariana Costa</strong><small>Product Designer</small></div>
+            </figcaption>
+          </figure>
+
+          <figure class="testimonial card reveal" style="--d: .1s">
+            <div class="stars" role="img" aria-label="5 de 5 estrelas">★★★★★</div>
+            <blockquote>
+              “Já tinha feito três cursos e nunca saía do lugar. Aqui o foco é conversa de verdade. Hoje assisto séries sem legenda e me sinto confortável viajando.”
+            </blockquote>
+            <figcaption>
+              <span class="testimonial__avatar">RS</span>
+              <div><strong>Rafael Souza</strong><small>Engenheiro de Software</small></div>
+            </figcaption>
+          </figure>
+
+          <figure class="testimonial card reveal" style="--d: .15s">
+            <div class="stars" role="img" aria-label="5 de 5 estrelas">★★★★★</div>
+            <blockquote>
+              “As turmas pequenas fazem toda a diferença. Tenho tempo de fala em toda aula e o feedback é direto, sem enrolação. Recomendo demais.”
+            </blockquote>
+            <figcaption>
+              <span class="testimonial__avatar">JL</span>
+              <div><strong>Juliana Lima</strong><small>Advogada</small></div>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FAQ ================= -->
+    <section class="section" id="faq">
+      <div class="container faq-layout">
+        <div class="section__head section__head--left faq-layout__head">
+          <span class="eyebrow reveal">Dúvidas</span>
+          <h2 class="section__title reveal" style="--d: .05s">Perguntas<br /><span class="gradient-text">frequentes</span></h2>
+          <p class="section__lead reveal" style="--d: .1s">Não achou o que procurava? Fale com a gente no WhatsApp.</p>
+        </div>
+
+        <div class="faq reveal" style="--d: .1s">
+          <div class="faq__item">
+            <button class="faq__question" aria-expanded="false" aria-controls="faq-1" id="faq-btn-1">
+              Preciso ter algum conhecimento de inglês?
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq__answer" id="faq-1" role="region" aria-labelledby="faq-btn-1">
+              <div class="faq__answer-inner"><p>Nenhum. Temos turmas do zero ao avançado. No teste de nível gratuito, identificamos o ponto exato para você começar — sem pressão e sem vergonha.</p></div>
+            </div>
+          </div>
+
+          <div class="faq__item">
+            <button class="faq__question" aria-expanded="false" aria-controls="faq-2" id="faq-btn-2">
+              Como funcionam as aulas?
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq__answer" id="faq-2" role="region" aria-labelledby="faq-btn-2">
+              <div class="faq__answer-inner"><p>As aulas são ao vivo, online e com no máximo 6 alunos. Cada encontro tem um tema real de conversação, prática guiada e feedback individual. Você também recebe tarefas curtas de fala entre as aulas.</p></div>
+            </div>
+          </div>
+
+          <div class="faq__item">
+            <button class="faq__question" aria-expanded="false" aria-controls="faq-3" id="faq-btn-3">
+              Qual é a duração do curso?
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq__answer" id="faq-3" role="region" aria-labelledby="faq-btn-3">
+              <div class="faq__answer-inner"><p>Depende do seu ponto de partida e do seu ritmo. Em média, alunos que começam do básico alcançam conversação confortável (B1/B2) entre 6 e 12 meses. Você pode continuar enquanto fizer sentido para você.</p></div>
+            </div>
+          </div>
+
+          <div class="faq__item">
+            <button class="faq__question" aria-expanded="false" aria-controls="faq-4" id="faq-btn-4">
+              Recebo certificado?
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq__answer" id="faq-4" role="region" aria-labelledby="faq-btn-4">
+              <div class="faq__answer-inner"><p>Sim. Nos planos Fluência e VIP você recebe certificado de conclusão com descrição do nível alcançado e das competências desenvolvidas.</p></div>
+            </div>
+          </div>
+
+          <div class="faq__item">
+            <button class="faq__question" aria-expanded="false" aria-controls="faq-5" id="faq-btn-5">
+              E se eu perder uma aula?
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq__answer" id="faq-5" role="region" aria-labelledby="faq-btn-5">
+              <div class="faq__answer-inner"><p>Todas as aulas ficam gravadas por 30 dias e você recebe o resumo com os pontos de prática. Se precisar, também pode repor em outra turma do mesmo nível, conforme disponibilidade.</p></div>
+            </div>
+          </div>
+
+          <div class="faq__item">
+            <button class="faq__question" aria-expanded="false" aria-controls="faq-6" id="faq-btn-6">
+              Existe fidelidade ou multa?
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq__answer" id="faq-6" role="region" aria-labelledby="faq-btn-6">
+              <div class="faq__answer-inner"><p>Não. Os planos são mensais e você pode cancelar quando quiser, sem multa. Além disso, nos primeiros 7 dias você tem garantia incondicional.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MATRÍCULA / CTA ================= -->
+    <section class="section cta-section" id="matricula">
+      <div class="hero__glow hero__glow--c" aria-hidden="true"></div>
+      <div class="container cta">
+        <div class="cta__copy">
+          <span class="eyebrow reveal">Vagas abertas</span>
+          <h2 class="section__title reveal" style="--d: .05s">
+            Sua próxima conversa<br />pode ser <span class="gradient-text">em inglês.</span>
+          </h2>
+          <p class="section__lead reveal" style="--d: .1s">
+            Preencha o formulário e receba um convite para o teste de nível gratuito.
+            Sem compromisso — só um papo para entender seu objetivo.
+          </p>
+
+          <ul class="cta__checks reveal" style="--d: .15s">
+            <li><span>✓</span> Teste de nível gratuito</li>
+            <li><span>✓</span> 7 dias de garantia</li>
+            <li><span>✓</span> Sem fidelidade</li>
+          </ul>
+        </div>
+
+        <form class="cta__form card reveal" id="signupForm" novalidate style="--d: .1s">
+          <div class="field">
+            <label for="name">Nome completo</label>
+            <input type="text" id="name" name="name" placeholder="Como podemos te chamar?" autocomplete="name" required />
+            <span class="field__error" data-error-for="name" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="voce@email.com" autocomplete="email" required />
+            <span class="field__error" data-error-for="email" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="phone">WhatsApp</label>
+            <input type="tel" id="phone" name="phone" placeholder="(11) 99999-9999" inputmode="tel" autocomplete="tel" required />
+            <span class="field__error" data-error-for="phone" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="level">Seu nível hoje</label>
+            <select id="level" name="level" required>
+              <option value="" selected disabled>Selecione uma opção</option>
+              <option value="zero">Nunca estudei</option>
+              <option value="basico">Básico</option>
+              <option value="intermediario">Intermediário</option>
+              <option value="avancado">Avançado</option>
+              <option value="nao-sei">Não sei — quero descobrir</option>
+            </select>
+            <span class="field__error" data-error-for="level" aria-live="polite"></span>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--block">
+            Quero garantir minha vaga
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </button>
+
+          <p class="form__note">Seus dados estão seguros. Nada de spam — prometido.</p>
+
+          <div class="form-success" id="formSuccess" role="status" aria-live="polite" hidden>
+            <span class="form-success__icon">✓</span>
+            <strong>Pedido enviado!</strong>
+            <p>Em breve entraremos em contato pelo WhatsApp para agendar seu teste de nível.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="#inicio" class="brand" aria-label="INGLISH NOW — início">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h7" /></svg>
+          </span>
+          <span class="brand__text">INGLISH<em>NOW</em></span>
+        </a>
+        <p>Inglês que sai do papel.<br />Conversação, confiança e fluência de verdade.</p>
+      </div>
+
+      <nav class="footer__nav" aria-label="Links do rodapé">
+        <h4>Navegue</h4>
+        <a href="#sobre">O curso</a>
+        <a href="#metodo">Método</a>
+        <a href="#planos">Planos</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div class="footer__contact">
+        <h4>Contato</h4>
+        <a href="mailto:contato@inglishnow.com.br">contato@inglishnow.com.br</a>
+        <a href="https://wa.me/5511999999999" target="_blank" rel="noopener">WhatsApp: (11) 99999-9999</a>
+        <div class="footer__social">
+          <a href="#" aria-label="Instagram">Instagram</a>
+          <a href="#" aria-label="YouTube">YouTube</a>
+          <a href="#" aria-label="LinkedIn">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container footer__bottom">
+      <p>© <span id="year">2026</span> INGLISH NOW. Todos os direitos reservados.</p>
+      <p>Feito com dedicação para quem quer falar. 🎧</p>
+    </div>
+  </footer>
+
+  <a href="#inicio" class="to-top" id="toTop" aria-label="Voltar ao topo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
+  </a>
+
+  <script src="script.js"></script>
+</body>
+</html>
