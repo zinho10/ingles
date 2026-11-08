@@ -251,9 +251,9 @@
   
 
 
+
 const SHEETS_ENDPOINT =
   "https://script.google.com/macros/s/AKfycbzld2AIeMKIWbnM_j7kmlzWj6wis85p_517-qx8te1_3zF1xmApe03hKz84azWhpmBx/exec";
-
 
   async function saveLead(data) {
     try {
