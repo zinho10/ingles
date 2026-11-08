@@ -1,3 +1,4 @@
+
 /* ============================================================
    ENGLISH NOW — interações
    ============================================================ */
@@ -189,7 +190,7 @@
     button.addEventListener("click", () => {
       const isOpen = item.classList.contains("is-open");
 
-      // fecha os demais
+      // Fecha os demais
       faqItems.forEach((other) => {
         if (other === item) return;
         other.classList.remove("is-open");
@@ -208,7 +209,7 @@
     });
   });
 
-  // Respostas fechadas ficam inertes (fora da navegação por teclado e leitores de tela)
+  // Respostas fechadas ficam inertes
   $$(".faq__answer").forEach((el) => el.setAttribute("inert", ""));
 
   /* ============================================================
@@ -239,48 +240,43 @@
   }
 
   /* ============================================================
-     8. Validação e envio da solicitação (WhatsApp + e-mail)
+     8. Validação e envio da solicitação
+     WhatsApp + e-mail + Google Sheets
      ============================================================ */
   const WHATSAPP_NUMBER = "5522981065343";
   const CONTACT_EMAIL = "nicki133029@email.com";
 
-  /* ---------- Supabase (banco de dados) ---------- */
-  const SUPABASE_CONFIG = window.ENGLISH_NOW_SUPABASE || {};
-  const SUPABASE_TABLE = SUPABASE_CONFIG.table || "leads";
+  /* ---------- Google Sheets (Apps Script) ---------- */
+  const SHEETS_ENDPOINT =
+    "https://script.google.com/macros/s/AKfycbwsR1JDPcn_8EHLUMbVUM5jeO2iaFdDILkjmbsPDaKW1RT0JofW2BMdRhAExu0c64Z_/exec";
 
-  const isPlaceholder = (value) => !value || /COLE_AQUI/i.test(String(value));
+  async function saveLead(data) {
+    try {
+      // A resposta é opaca: o navegador não consegue
+      // confirmar a gravação com o modo no-cors.
+      await fetch(SHEETS_ENDPOINT, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify({
+          nome: data.name,
+          email: data.email,
+          whatsapp: data.phone,
+          nivel: data.levelLabel,
+          origem: "Site ENGLISH NOW"
+        })
+      });
 
-  const supabaseReady =
-    !isPlaceholder(SUPABASE_CONFIG.url) &&
-    !isPlaceholder(SUPABASE_CONFIG.anonKey) &&
-    /^https?:\/\//i.test(SUPABASE_CONFIG.url) &&
-    typeof window.supabase?.createClient === "function";
-
-  const supabaseClient = supabaseReady
-    ? window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
-    : null;
-
-  async function saveLead(data, message) {
-    if (!supabaseClient) return { ok: false, reason: "not-configured" };
-
-    const { error } = await supabaseClient.from(SUPABASE_TABLE).insert({
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      level: data.level,
-      level_label: data.levelLabel,
-      message,
-      source: "site",
-      page_url: window.location.href,
-      user_agent: navigator.userAgent,
-    });
-
-    if (error) {
-      console.warn("[Supabase] Não foi possível salvar a solicitação:", error.message);
-      return { ok: false, reason: error.message };
+      return { sent: true };
+    } catch (error) {
+      console.warn(
+        "[Google Sheets] Não foi possível enviar o cadastro:",
+        error
+      );
+      return { sent: false };
     }
-
-    return { ok: true };
   }
 
   const form = $("#signupForm");
@@ -295,19 +291,24 @@
   const validators = {
     name(value) {
       if (!value.trim()) return "Informe seu nome.";
-      if (value.trim().length < 3) return "O nome precisa ter pelo menos 3 letras.";
+      if (value.trim().length < 3) {
+        return "O nome precisa ter pelo menos 3 letras.";
+      }
       return "";
     },
     email(value) {
       if (!value.trim()) return "Informe seu e-mail.";
-      if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(value.trim()))
+      if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(value.trim())) {
         return "Digite um e-mail válido.";
+      }
       return "";
     },
     phone(value) {
       const digits = value.replace(/\D/g, "");
       if (!digits) return "Informe seu WhatsApp.";
-      if (digits.length < 10) return "Digite o número com DDD.";
+      if (digits.length < 10) {
+        return "Digite o número com DDD.";
+      }
       return "";
     },
     level(value) {
@@ -335,6 +336,7 @@
   function validateField(field) {
     const validator = validators[field.name];
     if (!validator) return true;
+
     const message = validator(field.value);
     setError(field, message);
     return !message;
@@ -358,8 +360,9 @@
       phone: form.elements.phone.value.trim(),
       level: form.elements.level.value,
       levelLabel:
-        form.elements.level.options[form.elements.level.selectedIndex]?.text ||
-        "Não informado",
+        form.elements.level.options[
+          form.elements.level.selectedIndex
+        ]?.text || "Não informado",
     });
 
     const buildMessage = (data) =>
@@ -376,13 +379,14 @@
 
     const clearErrors = () => {
       fields.forEach((field) => setError(field, ""));
+
       $$(".field__error", form).forEach((el) => {
         el.textContent = "";
         el.classList.remove("is-active");
       });
     };
 
-    // O botão só fica ativo quando todos os campos estão preenchidos.
+    // O botão só fica ativo com todos os campos preenchidos
     fields.forEach((field) => {
       field.addEventListener("input", updateSubmitState);
       field.addEventListener("change", updateSubmitState);
@@ -392,11 +396,12 @@
       });
 
       field.addEventListener("input", () => {
-        if (field.getAttribute("aria-invalid") === "true") validateField(field);
+        if (field.getAttribute("aria-invalid") === "true") {
+          validateField(field);
+        }
       });
     });
 
-    // Revalida o estado em casos de autofill do navegador.
     form.addEventListener("focusin", updateSubmitState);
     window.addEventListener("load", updateSubmitState);
     setTimeout(updateSubmitState, 600);
@@ -422,26 +427,35 @@
       const message = buildMessage(data);
       const subject = `Nova solicitação de aula — ${data.name}`;
 
-      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-        message
-      )}`;
-      const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-        subject
-      )}&body=${encodeURIComponent(message)}`;
+      const whatsappUrl =
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+          message
+        )}`;
 
-      // Links de segurança, caso o navegador bloqueie a abertura automática.
+      const mailtoUrl =
+        `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+          subject
+        )}&body=${encodeURIComponent(message)}`;
+
+      // Links de segurança
       waFallback.href = whatsappUrl;
       emailFallback.href = mailtoUrl;
 
-      // 1) Abre o WhatsApp com todos os dados (precisa ser síncrono).
-      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      // 1) Abre o WhatsApp
+      window.open(
+        whatsappUrl,
+        "_blank",
+        "noopener,noreferrer"
+      );
 
-      // 2) Envia a mesma solicitação por e-mail (FormSubmit, sem backend).
+      // 2) Envia a solicitação por e-mail
       let emailRequested = false;
 
       if (emailRelay) {
         const setRelay = (name, value) => {
-          const input = emailRelay.querySelector(`[name="${name}"]`);
+          const input = emailRelay.querySelector(
+            `[name="${name}"]`
+          );
           if (input) input.value = value;
         };
 
@@ -457,48 +471,46 @@
           emailRelay.submit();
           emailRequested = true;
         } catch (err) {
-          // Se o envio automático falhar, o botão "Enviar por e-mail" continua disponível.
           if (emailStatus) {
             emailStatus.textContent =
-              "Não foi possível enviar o e-mail automaticamente. Use o botão “Enviar por e-mail”.";
+              "Não foi possível enviar o e-mail automaticamente. Use o botão Enviar por e-mail.";
           }
         }
       }
 
-      // 3) Salva a solicitação no Supabase (sem bloquear o WhatsApp).
+      // 3) Envia o cadastro para o Google Sheets
       if (saveStatus) {
-        if (!supabaseReady) {
-          saveStatus.textContent =
-            "Banco de dados não configurado. Veja o arquivo supabase-config.js.";
-          saveStatus.dataset.state = "warn";
-        } else {
-          saveStatus.textContent = "Salvando solicitação no banco de dados...";
-          saveStatus.dataset.state = "loading";
-
-          saveLead(data, message).then((result) => {
-            if (result.ok) {
-              saveStatus.textContent = "Solicitação salva no banco de dados.";
-              saveStatus.dataset.state = "ok";
-            } else {
-              saveStatus.textContent =
-                "Não foi possível salvar no banco agora. Seus dados foram enviados pelo WhatsApp e e-mail.";
-              saveStatus.dataset.state = "error";
-            }
-          });
-        }
+        saveStatus.textContent =
+          "Enviando cadastro para a planilha...";
+        saveStatus.dataset.state = "loading";
       }
 
-      // 4) Feedback visual e limpeza do formulário.
+      saveLead(data).then((result) => {
+        if (!saveStatus) return;
+
+        if (result.sent) {
+          saveStatus.textContent =
+            "Cadastro enviado para registro. Confira a planilha para confirmar.";
+          saveStatus.dataset.state = "warn";
+        } else {
+          saveStatus.textContent =
+            "Não foi possível enviar o cadastro à planilha. Tente novamente ou entre em contato.";
+          saveStatus.dataset.state = "error";
+        }
+      });
+
+      // 4) Feedback visual e limpeza do formulário
       form.reset();
       clearErrors();
       updateSubmitState();
 
       if (emailStatus) {
         if (emailRequested) {
-          emailStatus.textContent = `Cópia por e-mail solicitada para ${CONTACT_EMAIL}.`;
+          emailStatus.textContent =
+            `Cópia por e-mail solicitada para ${CONTACT_EMAIL}.`;
         } else if (!emailRelay) {
           emailStatus.textContent =
-            "Envie também por e-mail usando o botão “Enviar por e-mail”.";
+            "Envie também por e-mail usando o botão Enviar por e-mail.";
         }
       }
 
@@ -514,5 +526,8 @@
      9. Ano atual no rodapé
      ============================================================ */
   const yearEl = $("#year");
-  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  if (yearEl) {
+    yearEl.textContent = String(new Date().getFullYear());
+  }
 })();
