@@ -247,8 +247,10 @@
   const CONTACT_EMAIL = "nicki133029@email.com";
 
   /* ---------- Google Sheets (Apps Script) ---------- */
-  const SHEETS_ENDPOINT =
-    "https://script.google.com/macros/s/AKfycbwsR1JDPcn_8EHLUMbVUM5jeO2iaFdDILkjmbsPDaKW1RT0JofW2BMdRhAExu0c64Z_/exec";
+  
+const SHEETS_ENDPOINT =
+  "https://script.google.com/macros/s/AKfycbz2E9Aaqg08F3ziEfDtXvfcu3QvusopR-2OIP4Tn-yv2fEYbpM9-ADtjLHcMwjB8oGG/exec";
+
 
   async function saveLead(data) {
     try {
