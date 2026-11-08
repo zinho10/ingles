@@ -1,4 +1,5 @@
 
+
 /* ============================================================
    ENGLISH NOW — interações
    ============================================================ */
@@ -249,8 +250,9 @@
   /* ---------- Google Sheets (Apps Script) ---------- */
   
 
+
 const SHEETS_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbwP-QlCQH0kkYykZXEF-sRiquoUQiDdQDXbJ0Yz2dvniFQMwmj4G0ku0VPs-1i0jZiL/exec";
+  "https://script.google.com/macros/s/AKfycbzld2AIeMKIWbnM_j7kmlzWj6wis85p_517-qx8te1_3zF1xmApe03hKz84azWhpmBx/exec";
 
 
   async function saveLead(data) {
