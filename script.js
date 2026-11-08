@@ -1,108 +1,121 @@
 
-
 /* ============================================================
-   ENGLISH NOW — interações
+   ENGLISH NOW — script.js completo corrigido
    ============================================================ */
 (function () {
   "use strict";
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
 
-  /* ---------- Helpers ---------- */
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
-  const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+  const $$ = (sel, ctx = document) =>
+    Array.from(ctx.querySelectorAll(sel));
 
-  /* ============================================================
-     1. Header fixo + barra de progresso + botão "voltar ao topo"
-     ============================================================ */
+  // 1. Cabeçalho, progresso e voltar ao topo
   const header = $("#header");
   const scrollBar = $("#scrollBar");
   const toTop = $("#toTop");
 
   function onScroll() {
-    const y = window.scrollY || document.documentElement.scrollTop;
-    const height = document.documentElement.scrollHeight - window.innerHeight;
+    const y = window.scrollY ||
+      document.documentElement.scrollTop;
+    const height =
+      document.documentElement.scrollHeight -
+      window.innerHeight;
     const progress = height > 0 ? (y / height) * 100 : 0;
 
-    header.classList.toggle("is-scrolled", y > 24);
-    toTop.classList.toggle("is-visible", y > 600);
-    scrollBar.style.width = progress + "%";
+    if (header) header.classList.toggle("is-scrolled", y > 24);
+    if (toTop) toTop.classList.toggle("is-visible", y > 600);
+    if (scrollBar) scrollBar.style.width = progress + "%";
   }
 
-  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("scroll", onScroll, {
+    passive: true
+  });
   onScroll();
 
-  /* ============================================================
-     2. Menu mobile
-     ============================================================ */
+  // 2. Menu mobile
   const nav = $("#nav");
   const navToggle = $("#navToggle");
 
   function closeNav() {
+    if (!nav || !navToggle) return;
     nav.classList.remove("is-open");
     navToggle.setAttribute("aria-expanded", "false");
     navToggle.setAttribute("aria-label", "Abrir menu");
     document.body.classList.remove("nav-open");
   }
 
-  function toggleNav() {
-    const open = nav.classList.toggle("is-open");
-    navToggle.setAttribute("aria-expanded", String(open));
-    navToggle.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
-    document.body.classList.toggle("nav-open", open);
+  if (nav && navToggle) {
+    navToggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("is-open");
+      navToggle.setAttribute("aria-expanded", String(open));
+      navToggle.setAttribute(
+        "aria-label",
+        open ? "Fechar menu" : "Abrir menu"
+      );
+      document.body.classList.toggle("nav-open", open);
+    });
+
+    $$(".nav a").forEach(link => {
+      link.addEventListener("click", closeNav);
+    });
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" &&
+          nav.classList.contains("is-open")) {
+        closeNav();
+        navToggle.focus();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 900) closeNav();
+    });
   }
 
-  navToggle.addEventListener("click", toggleNav);
-
-  $$(".nav a").forEach((link) => {
-    link.addEventListener("click", closeNav);
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && nav.classList.contains("is-open")) {
-      closeNav();
-      navToggle.focus();
-    }
-  });
-
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 900) closeNav();
-  });
-
-  /* ============================================================
-     3. Reveal on scroll
-     ============================================================ */
+  // 3. Animações de entrada
   const revealEls = $$(".reveal");
 
-  if (reduceMotion || !("IntersectionObserver" in window)) {
-    revealEls.forEach((el) => el.classList.add("is-visible"));
+  if (reduceMotion ||
+      !("IntersectionObserver" in window)) {
+    revealEls.forEach(el => el.classList.add("is-visible"));
   } else {
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-    );
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: "0px 0px -40px 0px"
+    });
 
-    revealEls.forEach((el) => revealObserver.observe(el));
+    revealEls.forEach(el => observer.observe(el));
   }
 
-  /* ============================================================
-     4. Contadores animados
-     ============================================================ */
+  // 4. Contadores animados
   const counters = $$(".count");
   const numberFmt = new Intl.NumberFormat("pt-BR");
 
   function animateCounter(el) {
     const target = parseFloat(el.dataset.count || "0");
-    const decimals = parseInt(el.dataset.decimals || "0", 10);
+    const decimals = parseInt(
+      el.dataset.decimals || "0", 10
+    );
     const suffix = el.dataset.suffix || "";
     const duration = 1600;
+
+    function format(value) {
+      if (decimals > 0) {
+        return value.toFixed(decimals).replace(".", ",");
+      }
+      return numberFmt.format(Math.round(value));
+    }
 
     if (reduceMotion) {
       el.textContent = format(target) + suffix;
@@ -114,16 +127,9 @@
     function frame(now) {
       const t = Math.min((now - start) / duration, 1);
       const eased = 1 - Math.pow(1 - t, 3);
-      const value = target * eased;
-      el.textContent = format(value) + suffix;
-      if (t < 1) requestAnimationFrame(frame);
-    }
+      el.textContent = format(target * eased) + suffix;
 
-    function format(value) {
-      if (decimals > 0) {
-        return value.toFixed(decimals).replace(".", ",");
-      }
-      return numberFmt.format(Math.round(value));
+      if (t < 1) requestAnimationFrame(frame);
     }
 
     requestAnimationFrame(frame);
@@ -133,70 +139,75 @@
     if (!("IntersectionObserver" in window)) {
       counters.forEach(animateCounter);
     } else {
-      const counterObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              animateCounter(entry.target);
-              counterObserver.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.6 }
-      );
-      counters.forEach((el) => counterObserver.observe(el));
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.6 });
+
+      counters.forEach(el => observer.observe(el));
     }
   }
 
-  /* ============================================================
-     5. Link ativo no menu conforme a seção visível
-     ============================================================ */
+  // 5. Links ativos do menu
   const navLinks = $$(".nav__link");
+
   const sections = navLinks
-    .map((link) => {
+    .map(link => {
       const id = link.getAttribute("href");
       return id && id.startsWith("#") ? $(id) : null;
     })
     .filter(Boolean);
 
-  if (sections.length && "IntersectionObserver" in window) {
-    const sectionObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const id = "#" + entry.target.id;
-          navLinks.forEach((link) => {
-            link.classList.toggle(
-              "is-active",
-              link.getAttribute("href") === id
-            );
-          });
-        });
-      },
-      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
-    );
+  if (sections.length &&
+      "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const id = "#" + entry.target.id;
 
-    sections.forEach((section) => sectionObserver.observe(section));
+        navLinks.forEach(link => {
+          link.classList.toggle(
+            "is-active",
+            link.getAttribute("href") === id
+          );
+        });
+      });
+    }, {
+      rootMargin: "-45% 0px -50% 0px",
+      threshold: 0
+    });
+
+    sections.forEach(section => observer.observe(section));
   }
 
-  /* ============================================================
-     6. FAQ (acordeão acessível)
-     ============================================================ */
+  // 6. FAQ
   const faqItems = $$(".faq__item");
 
-  faqItems.forEach((item) => {
+  faqItems.forEach(item => {
     const button = $(".faq__question", item);
     const answer = $(".faq__answer", item);
+    if (!button || !answer) return;
 
     button.addEventListener("click", () => {
       const isOpen = item.classList.contains("is-open");
 
-      // Fecha os demais
-      faqItems.forEach((other) => {
+      faqItems.forEach(other => {
         if (other === item) return;
         other.classList.remove("is-open");
-        $(".faq__question", other).setAttribute("aria-expanded", "false");
-        $(".faq__answer", other).setAttribute("inert", "");
+
+        const otherButton = $(".faq__question", other);
+        const otherAnswer = $(".faq__answer", other);
+
+        if (otherButton) {
+          otherButton.setAttribute("aria-expanded", "false");
+        }
+        if (otherAnswer) {
+          otherAnswer.setAttribute("inert", "");
+        }
       });
 
       item.classList.toggle("is-open", !isOpen);
@@ -210,60 +221,50 @@
     });
   });
 
-  // Respostas fechadas ficam inertes
-  $$(".faq__answer").forEach((el) => el.setAttribute("inert", ""));
+  $$(".faq__answer").forEach(el => {
+    el.setAttribute("inert", "");
+  });
 
-  /* ============================================================
-     7. Máscara de WhatsApp
-     ============================================================ */
+  // 7. Máscara de WhatsApp
   const phoneInput = $("#phone");
 
   if (phoneInput) {
     phoneInput.addEventListener("input", () => {
-      let digits = phoneInput.value.replace(/\D/g, "").slice(0, 11);
+      const digits = phoneInput.value
+        .replace(/\D/g, "")
+        .slice(0, 11);
 
       if (digits.length > 6) {
+        const split = digits.length > 10 ? 7 : 6;
         phoneInput.value =
-          "(" +
-          digits.slice(0, 2) +
-          ") " +
-          digits.slice(2, digits.length > 10 ? 7 : 6) +
-          "-" +
-          digits.slice(digits.length > 10 ? 7 : 6);
+          "(" + digits.slice(0, 2) + ") " +
+          digits.slice(2, split) + "-" +
+          digits.slice(split);
       } else if (digits.length > 2) {
-        phoneInput.value = "(" + digits.slice(0, 2) + ") " + digits.slice(2);
-      } else if (digits.length > 0) {
-        phoneInput.value = "(" + digits;
+        phoneInput.value =
+          "(" + digits.slice(0, 2) + ") " +
+          digits.slice(2);
       } else {
-        phoneInput.value = "";
+        phoneInput.value = digits.length
+          ? "(" + digits
+          : "";
       }
     });
   }
 
-  /* ============================================================
-     8. Validação e envio da solicitação
-     WhatsApp + e-mail + Google Sheets
-     ============================================================ */
+  // 8. Integração WhatsApp, e-mail e Google Sheets
   const WHATSAPP_NUMBER = "5522981065343";
   const CONTACT_EMAIL = "nicki133029@email.com";
 
-  /* ---------- Google Sheets (Apps Script) ---------- */
-  
-
-
-
-
-const SHEETS_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbzxhgS_hDO0V64Pgn1mnWXQLS_K0oW_2PBGMMN3MXbC5SEXGXMBX7StbpnLAbBx_GrS/exec";
-
+  const SHEETS_ENDPOINT =
+    "https://script.google.com/macros/s/AKfycbzxhgS_hDO0V64Pgn1mnWXQLS_K0oW_2PBGMMN3MXbC5SEXGXMBX7StbpnLAbBx_GrS/exec";
 
   async function saveLead(data) {
     try {
-      // A resposta é opaca: o navegador não consegue
-      // confirmar a gravação com o modo no-cors.
       await fetch(SHEETS_ENDPOINT, {
         method: "POST",
         mode: "no-cors",
+        keepalive: true,
         headers: {
           "Content-Type": "text/plain;charset=utf-8"
         },
@@ -276,10 +277,12 @@ const SHEETS_ENDPOINT =
         })
       });
 
+      // no-cors não permite confirmar gravação.
       return { sent: true };
+
     } catch (error) {
       console.warn(
-        "[Google Sheets] Não foi possível enviar o cadastro:",
+        "[Google Sheets] Falha no envio:",
         error
       );
       return { sent: false };
@@ -303,13 +306,17 @@ const SHEETS_ENDPOINT =
       }
       return "";
     },
+
     email(value) {
       if (!value.trim()) return "Informe seu e-mail.";
-      if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(value.trim())) {
+      if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(
+        value.trim()
+      )) {
         return "Digite um e-mail válido.";
       }
       return "";
     },
+
     phone(value) {
       const digits = value.replace(/\D/g, "");
       if (!digits) return "Informe seu WhatsApp.";
@@ -318,20 +325,26 @@ const SHEETS_ENDPOINT =
       }
       return "";
     },
+
     level(value) {
-      if (!value) return "Selecione seu nível.";
-      return "";
-    },
+      return value ? "" : "Selecione seu nível.";
+    }
   };
 
   function setError(field, message) {
-    const errorEl = $(`[data-error-for="${field.name}"]`);
+    const errorEl = $(
+      `[data-error-for="${field.name}"]`
+    );
+    if (!errorEl) return;
 
     if (message) {
       errorEl.textContent = message;
       errorEl.classList.add("is-active");
       field.setAttribute("aria-invalid", "true");
-      field.setAttribute("aria-describedby", `err-${field.name}`);
+      field.setAttribute(
+        "aria-describedby",
+        `err-${field.name}`
+      );
       errorEl.id = `err-${field.name}`;
     } else {
       errorEl.textContent = "";
@@ -349,31 +362,36 @@ const SHEETS_ENDPOINT =
     return !message;
   }
 
-  if (form) {
-    const fields = ["name", "email", "phone", "level"]
-      .map((name) => form.elements[name])
-      .filter(Boolean);
+  if (form && submitBtn) {
+    const fields = [
+      "name", "email", "phone", "level"
+    ].map(name => form.elements[name]).filter(Boolean);
 
     const allFilled = () =>
-      fields.every((field) => String(field.value).trim() !== "");
+      fields.every(field =>
+        String(field.value).trim() !== ""
+      );
 
-    const updateSubmitState = () => {
-      submitBtn.disabled = !allFilled();
-    };
+    function updateSubmitState() {
+      submitBtn.disabled =
+        form.dataset.submitting === "true" || !allFilled();
+    }
 
-    const getData = () => ({
-      name: form.elements.name.value.trim(),
-      email: form.elements.email.value.trim(),
-      phone: form.elements.phone.value.trim(),
-      level: form.elements.level.value,
-      levelLabel:
-        form.elements.level.options[
-          form.elements.level.selectedIndex
-        ]?.text || "Não informado",
-    });
+    function getData() {
+      return {
+        name: form.elements.name.value.trim(),
+        email: form.elements.email.value.trim(),
+        phone: form.elements.phone.value.trim(),
+        level: form.elements.level.value,
+        levelLabel:
+          form.elements.level.options[
+            form.elements.level.selectedIndex
+          ]?.text || "Não informado"
+      };
+    }
 
-    const buildMessage = (data) =>
-      [
+    function buildMessage(data) {
+      return [
         "Olá, Professor Nicolas! Quero agendar uma aula de inglês.",
         "",
         `Nome: ${data.name}`,
@@ -381,20 +399,20 @@ const SHEETS_ENDPOINT =
         `WhatsApp: ${data.phone}`,
         `Nível: ${data.levelLabel}`,
         "",
-        "Solicitação enviada pelo site ENGLISH NOW.",
+        "Solicitação enviada pelo site ENGLISH NOW."
       ].join("\n");
+    }
 
-    const clearErrors = () => {
-      fields.forEach((field) => setError(field, ""));
+    function clearErrors() {
+      fields.forEach(field => setError(field, ""));
 
-      $$(".field__error", form).forEach((el) => {
+      $$(".field__error", form).forEach(el => {
         el.textContent = "";
         el.classList.remove("is-active");
       });
-    };
+    }
 
-    // O botão só fica ativo com todos os campos preenchidos
-    fields.forEach((field) => {
+    fields.forEach(field => {
       field.addEventListener("input", updateSubmitState);
       field.addEventListener("change", updateSubmitState);
 
@@ -412,17 +430,19 @@ const SHEETS_ENDPOINT =
     form.addEventListener("focusin", updateSubmitState);
     window.addEventListener("load", updateSubmitState);
     setTimeout(updateSubmitState, 600);
-
     updateSubmitState();
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async e => {
       e.preventDefault();
+
+      if (form.dataset.submitting === "true") return;
 
       let firstInvalid = null;
 
-      fields.forEach((field) => {
-        const ok = validateField(field);
-        if (!ok && !firstInvalid) firstInvalid = field;
+      fields.forEach(field => {
+        if (!validateField(field) && !firstInvalid) {
+          firstInvalid = field;
+        }
       });
 
       if (firstInvalid) {
@@ -430,32 +450,51 @@ const SHEETS_ENDPOINT =
         return;
       }
 
+      form.dataset.submitting = "true";
+      updateSubmitState();
+
       const data = getData();
       const message = buildMessage(data);
-      const subject = `Nova solicitação de aula — ${data.name}`;
+      const subject =
+        `Nova solicitação de aula — ${data.name}`;
 
       const whatsappUrl =
-        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-          message
-        )}`;
+        `https://wa.me/${WHATSAPP_NUMBER}?text=` +
+        encodeURIComponent(message);
 
       const mailtoUrl =
-        `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-          subject
-        )}&body=${encodeURIComponent(message)}`;
+        `mailto:${CONTACT_EMAIL}?subject=` +
+        encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(message);
 
-      // Links de segurança
-      waFallback.href = whatsappUrl;
-      emailFallback.href = mailtoUrl;
+      if (waFallback) waFallback.href = whatsappUrl;
+      if (emailFallback) emailFallback.href = mailtoUrl;
 
-      // 1) Abre o WhatsApp
+      // Abre WhatsApp
       window.open(
         whatsappUrl,
         "_blank",
         "noopener,noreferrer"
       );
 
-      // 2) Envia a solicitação por e-mail
+      // Primeiro: envia para Google Sheets
+      if (saveStatus) {
+        saveStatus.textContent =
+          "Enviando cadastro para a planilha...";
+        saveStatus.dataset.state = "loading";
+      }
+
+      const result = await saveLead(data);
+
+      if (saveStatus) {
+        saveStatus.textContent = result.sent
+          ? "Cadastro enviado. Confira a planilha para confirmar."
+          : "Não foi possível enviar o cadastro à planilha.";
+        saveStatus.dataset.state =
+          result.sent ? "warn" : "error";
+      }
+
+      // Depois: solicita envio por e-mail
       let emailRequested = false;
 
       if (emailRelay) {
@@ -480,61 +519,41 @@ const SHEETS_ENDPOINT =
         } catch (err) {
           if (emailStatus) {
             emailStatus.textContent =
-              "Não foi possível enviar o e-mail automaticamente. Use o botão Enviar por e-mail.";
+              "Não foi possível solicitar o envio do e-mail.";
           }
         }
       }
 
-      // 3) Envia o cadastro para o Google Sheets
-      if (saveStatus) {
-        saveStatus.textContent =
-          "Enviando cadastro para a planilha...";
-        saveStatus.dataset.state = "loading";
-      }
-
-      saveLead(data).then((result) => {
-        if (!saveStatus) return;
-
-        if (result.sent) {
-          saveStatus.textContent =
-            "Cadastro enviado para registro. Confira a planilha para confirmar.";
-          saveStatus.dataset.state = "warn";
-        } else {
-          saveStatus.textContent =
-            "Não foi possível enviar o cadastro à planilha. Tente novamente ou entre em contato.";
-          saveStatus.dataset.state = "error";
-        }
-      });
-
-      // 4) Feedback visual e limpeza do formulário
       form.reset();
       clearErrors();
+      form.dataset.submitting = "false";
       updateSubmitState();
 
       if (emailStatus) {
         if (emailRequested) {
           emailStatus.textContent =
-            `Cópia por e-mail solicitada para ${CONTACT_EMAIL}.`;
+            `Envio por e-mail solicitado para ${CONTACT_EMAIL}.`;
         } else if (!emailRelay) {
           emailStatus.textContent =
-            "Envie também por e-mail usando o botão Enviar por e-mail.";
+            "Use o botão Enviar por e-mail, se necessário.";
         }
       }
 
-      successBox.hidden = false;
-      successBox.scrollIntoView({
-        behavior: reduceMotion ? "auto" : "smooth",
-        block: "center",
-      });
+      if (successBox) {
+        successBox.hidden = false;
+        successBox.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "center"
+        });
+      }
     });
   }
 
-  /* ============================================================
-     9. Ano atual no rodapé
-     ============================================================ */
+  // 9. Ano atual no rodapé
   const yearEl = $("#year");
 
   if (yearEl) {
-    yearEl.textContent = String(new Date().getFullYear());
+    yearEl.textContent =
+      String(new Date().getFullYear());
   }
 })();
