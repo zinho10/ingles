@@ -1,5 +1,5 @@
 /* ============================================================
-   INGLISH NOW — interações
+   ENGLISH NOW — interações
    ============================================================ */
 (function () {
   "use strict";
@@ -239,10 +239,58 @@
   }
 
   /* ============================================================
-     8. Validação do formulário
+     8. Validação e envio da solicitação (WhatsApp + e-mail)
      ============================================================ */
+  const WHATSAPP_NUMBER = "5522981065343";
+  const CONTACT_EMAIL = "nicki133029@email.com";
+
+  /* ---------- Supabase (banco de dados) ---------- */
+  const SUPABASE_CONFIG = window.ENGLISH_NOW_SUPABASE || {};
+  const SUPABASE_TABLE = SUPABASE_CONFIG.table || "leads";
+
+  const isPlaceholder = (value) => !value || /COLE_AQUI/i.test(String(value));
+
+  const supabaseReady =
+    !isPlaceholder(SUPABASE_CONFIG.url) &&
+    !isPlaceholder(SUPABASE_CONFIG.anonKey) &&
+    /^https?:\/\//i.test(SUPABASE_CONFIG.url) &&
+    typeof window.supabase?.createClient === "function";
+
+  const supabaseClient = supabaseReady
+    ? window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
+    : null;
+
+  async function saveLead(data, message) {
+    if (!supabaseClient) return { ok: false, reason: "not-configured" };
+
+    const { error } = await supabaseClient.from(SUPABASE_TABLE).insert({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      level: data.level,
+      level_label: data.levelLabel,
+      message,
+      source: "site",
+      page_url: window.location.href,
+      user_agent: navigator.userAgent,
+    });
+
+    if (error) {
+      console.warn("[Supabase] Não foi possível salvar a solicitação:", error.message);
+      return { ok: false, reason: error.message };
+    }
+
+    return { ok: true };
+  }
+
   const form = $("#signupForm");
   const successBox = $("#formSuccess");
+  const submitBtn = $("#submitBtn");
+  const emailRelay = $("#emailRelay");
+  const waFallback = $("#waFallback");
+  const emailFallback = $("#emailFallback");
+  const emailStatus = $("#emailStatus");
+  const saveStatus = $("#saveStatus");
 
   const validators = {
     name(value) {
@@ -297,15 +345,63 @@
       .map((name) => form.elements[name])
       .filter(Boolean);
 
-    // valida ao sair do campo (depois de já ter sido tocado)
+    const allFilled = () =>
+      fields.every((field) => String(field.value).trim() !== "");
+
+    const updateSubmitState = () => {
+      submitBtn.disabled = !allFilled();
+    };
+
+    const getData = () => ({
+      name: form.elements.name.value.trim(),
+      email: form.elements.email.value.trim(),
+      phone: form.elements.phone.value.trim(),
+      level: form.elements.level.value,
+      levelLabel:
+        form.elements.level.options[form.elements.level.selectedIndex]?.text ||
+        "Não informado",
+    });
+
+    const buildMessage = (data) =>
+      [
+        "Olá, Professor Nicolas! Quero agendar uma aula de inglês.",
+        "",
+        `Nome: ${data.name}`,
+        `E-mail: ${data.email}`,
+        `WhatsApp: ${data.phone}`,
+        `Nível: ${data.levelLabel}`,
+        "",
+        "Solicitação enviada pelo site ENGLISH NOW.",
+      ].join("\n");
+
+    const clearErrors = () => {
+      fields.forEach((field) => setError(field, ""));
+      $$(".field__error", form).forEach((el) => {
+        el.textContent = "";
+        el.classList.remove("is-active");
+      });
+    };
+
+    // O botão só fica ativo quando todos os campos estão preenchidos.
     fields.forEach((field) => {
+      field.addEventListener("input", updateSubmitState);
+      field.addEventListener("change", updateSubmitState);
+
       field.addEventListener("blur", () => {
         if (field.value) validateField(field);
       });
+
       field.addEventListener("input", () => {
         if (field.getAttribute("aria-invalid") === "true") validateField(field);
       });
     });
+
+    // Revalida o estado em casos de autofill do navegador.
+    form.addEventListener("focusin", updateSubmitState);
+    window.addEventListener("load", updateSubmitState);
+    setTimeout(updateSubmitState, 600);
+
+    updateSubmitState();
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -322,29 +418,95 @@
         return;
       }
 
-      // Simulação de envio (aqui você conectaria a um backend/Formspree)
-      const submitBtn = $('button[type="submit"]', form);
-      const original = submitBtn.innerHTML;
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Enviando...";
+      const data = getData();
+      const message = buildMessage(data);
+      const subject = `Nova solicitação de aula — ${data.name}`;
 
-      setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = original;
+      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+        message
+      )}`;
+      const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(message)}`;
 
-        form.reset();
-        fields.forEach((field) => setError(field, ""));
-        $$(".field__error", form).forEach((el) => {
-          el.textContent = "";
-          el.classList.remove("is-active");
-        });
+      // Links de segurança, caso o navegador bloqueie a abertura automática.
+      waFallback.href = whatsappUrl;
+      emailFallback.href = mailtoUrl;
 
-        successBox.hidden = false;
-        successBox.scrollIntoView({
-          behavior: reduceMotion ? "auto" : "smooth",
-          block: "center",
-        });
-      }, 900);
+      // 1) Abre o WhatsApp com todos os dados (precisa ser síncrono).
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+
+      // 2) Envia a mesma solicitação por e-mail (FormSubmit, sem backend).
+      let emailRequested = false;
+
+      if (emailRelay) {
+        const setRelay = (name, value) => {
+          const input = emailRelay.querySelector(`[name="${name}"]`);
+          if (input) input.value = value;
+        };
+
+        setRelay("_subject", subject);
+        setRelay("_replyto", data.email);
+        setRelay("Nome", data.name);
+        setRelay("email", data.email);
+        setRelay("WhatsApp", data.phone);
+        setRelay("Nível", data.levelLabel);
+        setRelay("Mensagem", message);
+
+        try {
+          emailRelay.submit();
+          emailRequested = true;
+        } catch (err) {
+          // Se o envio automático falhar, o botão "Enviar por e-mail" continua disponível.
+          if (emailStatus) {
+            emailStatus.textContent =
+              "Não foi possível enviar o e-mail automaticamente. Use o botão “Enviar por e-mail”.";
+          }
+        }
+      }
+
+      // 3) Salva a solicitação no Supabase (sem bloquear o WhatsApp).
+      if (saveStatus) {
+        if (!supabaseReady) {
+          saveStatus.textContent =
+            "Banco de dados não configurado. Veja o arquivo supabase-config.js.";
+          saveStatus.dataset.state = "warn";
+        } else {
+          saveStatus.textContent = "Salvando solicitação no banco de dados...";
+          saveStatus.dataset.state = "loading";
+
+          saveLead(data, message).then((result) => {
+            if (result.ok) {
+              saveStatus.textContent = "Solicitação salva no banco de dados.";
+              saveStatus.dataset.state = "ok";
+            } else {
+              saveStatus.textContent =
+                "Não foi possível salvar no banco agora. Seus dados foram enviados pelo WhatsApp e e-mail.";
+              saveStatus.dataset.state = "error";
+            }
+          });
+        }
+      }
+
+      // 4) Feedback visual e limpeza do formulário.
+      form.reset();
+      clearErrors();
+      updateSubmitState();
+
+      if (emailStatus) {
+        if (emailRequested) {
+          emailStatus.textContent = `Cópia por e-mail solicitada para ${CONTACT_EMAIL}.`;
+        } else if (!emailRelay) {
+          emailStatus.textContent =
+            "Envie também por e-mail usando o botão “Enviar por e-mail”.";
+        }
+      }
+
+      successBox.hidden = false;
+      successBox.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "center",
+      });
     });
   }
 
