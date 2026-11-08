@@ -248,8 +248,9 @@
 
   /* ---------- Google Sheets (Apps Script) ---------- */
   
+
 const SHEETS_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbz2E9Aaqg08F3ziEfDtXvfcu3QvusopR-2OIP4Tn-yv2fEYbpM9-ADtjLHcMwjB8oGG/exec";
+  "https://script.google.com/macros/s/AKfycbwP-QlCQH0kkYykZXEF-sRiquoUQiDdQDXbJ0Yz2dvniFQMwmj4G0ku0VPs-1i0jZiL/exec";
 
 
   async function saveLead(data) {
