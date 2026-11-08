@@ -252,8 +252,9 @@
 
 
 
+
 const SHEETS_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbySikg4B0YvIslZA2k7j2TPhHafwAkiX3IgZPaXJ-2C9_pMyFCOq-2JtqdMQlf3KNeG/exec";
+  "https://script.google.com/macros/s/AKfycbzxhgS_hDO0V64Pgn1mnWXQLS_K0oW_2PBGMMN3MXbC5SEXGXMBX7StbpnLAbBx_GrS/exec";
 
 
   async function saveLead(data) {
