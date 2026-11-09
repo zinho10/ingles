@@ -308,11 +308,25 @@
     },
 
     email(value) {
-      if (!value.trim()) return "Informe seu e-mail.";
-      if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(
-        value.trim()
-      )) {
-        return "Digite um e-mail válido.";
+      const email = value.trim();
+      if (!email) return "Informe seu e-mail.";
+      // Verifica formato, tamanho, domínio e pontos consecutivos.
+      // Não comprova a existência da caixa postal.
+      const parts = email.split("@");
+      if (email.length > 254 || parts.length !== 2) {
+        return "Digite um e-mail válido (ex.: nome@dominio.com).";
+      }
+      const [local, domain] = parts;
+      const labels = domain.split(".");
+      const localValid = local.length > 0 && local.length <= 64 &&
+        /^[a-z0-9!#$%&'*+/=?^_`{|}~.-]+$/i.test(local) &&
+        !local.startsWith(".") && !local.endsWith(".") &&
+        !local.includes("..");
+      const domainValid = labels.length >= 2 &&
+        labels.every(label => /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/i.test(label)) &&
+        /^[a-z]{2,}$/i.test(labels[labels.length - 1]);
+      if (!localValid || !domainValid) {
+        return "Digite um e-mail válido (ex.: nome@dominio.com).";
       }
       return "";
     },
@@ -320,8 +334,23 @@
     phone(value) {
       const digits = value.replace(/\D/g, "");
       if (!digits) return "Informe seu WhatsApp.";
-      if (digits.length < 10) {
-        return "Digite o número com DDD.";
+      if (digits.length !== 11) {
+        return "Informe um celular com DDD e 11 dígitos.";
+      }
+      const ddd = digits.slice(0, 2);
+      const validDDDs = new Set([
+        "11","12","13","14","15","16","17","18","19",
+        "21","22","24","27","28","31","32","33","34","35","37","38",
+        "41","42","43","44","45","46","47","48","49",
+        "51","53","54","55","61","62","64","63","65","66","67",
+        "68","69","71","73","74","75","77","79","81","87",
+        "82","83","84","85","88","86","89","91","93","94",
+        "92","97","95","96","98","99"
+      ]);
+      if (!validDDDs.has(ddd) || digits[2] !== "9" ||
+          /^(\d)\1{10}$/.test(digits) ||
+          /^(\d)\1{8}$/.test(digits.slice(2))) {
+        return "Informe um celular brasileiro válido com DDD.";
       }
       return "";
     },
@@ -369,7 +398,7 @@
 
     const allFilled = () =>
       fields.every(field =>
-        String(field.value).trim() !== ""
+        !validators[field.name](String(field.value))
       );
 
     function updateSubmitState() {
